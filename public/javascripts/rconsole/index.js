@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Plupz Ltda.
+ * Copyright 2011 Éverton Antônio Ribeiro <nuxlli@gmail.com>.
  * Licensed under the New BSD license. See LICENSE.txt or:
  * http://opensource.org/licenses/BSD-3-Clause
  */
@@ -9,9 +9,6 @@ define(function(require, exports, module) {
   require('gcli/index');
 
   require('rconsole/commands/basic').startup();
-  // require('demo/commands/bugs').startup();
-  // require('demo/commands/demo').startup();
-  // require('demo/commands/experimental').startup();
 
   var help = require('rconsole/commands/help');
   help.startup();

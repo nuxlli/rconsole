@@ -1,0 +1,3 @@
+[submodule "vendor/gcli"]
+	path = vendor/gcli
+	url = git://github.com/joewalker/gcli.git

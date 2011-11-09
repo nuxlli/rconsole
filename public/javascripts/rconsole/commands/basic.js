@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Plupz Ltda.
+ * Copyright 2011 Éverton Antônio Ribeiro <nuxlli@gmail.com>.
  * Licensed under the New BSD license. See LICENSE.txt or:
  * http://opensource.org/licenses/BSD-3-Clause
  */
