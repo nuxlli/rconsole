@@ -28,27 +28,51 @@ define(function(require, exports, module) {
     var listen = {
         name: 'listen',
         description: {
-            'root': 'Listen for remote console'
+            'root': 'Start remote debugging session'
         },
         params: [{
             name: "id",
             type: "string",
             description: {
-                root: "id for listen old connection"
+                root: "id to connect old session"
             },
             defaultValue: null
         }],
         exec: function(args, context) {
             var promise = context.createPromise();
+            var is_new  = args.id == null;
             
             getConnect().emit("listen", args.id, function(info) {
-                console.log(info);
-                var instructions = 'script id="rconsole" src="' + window.location.href + '/remote.js?' + info.id + '"'
+                var instructions = 'Start remote debugging for session id: <strong>' + info.id + '</strong>';
+                
+                if (is_new) {
+                    instructions += "<br/>Add the following tag to the remote script:"
+                    instructions += shHtml('<script id="rconsole"\n  src="' + window.location.href + 'rconsole.js?' + info.id + '">\n</script>');
+                }
+                
                 promise.resolve(instructions);
             });
             
             return promise;
         }
+    }
+    
+    var htmlBrush = null
+    function shHtml(html) {
+        if (htmlBrush == null) {
+            htmlBrush = new SyntaxHighlighter.brushes.Xml();
+            htmlBrush.init({ toolbar: false })
+        }
+        return htmlBrush.getHtml(html);
+    }
+    
+    function escapeHTML(string) {
+         return(
+             string.replace(/&/g,'&amp;').
+                    replace(/>/g,'&gt;').
+                    replace(/</g,'&lt;').
+                    replace(/"/g,'&quot;')
+        );
     }
     
     function getConnect() {
