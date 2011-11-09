@@ -66,15 +66,6 @@ define(function(require, exports, module) {
         return htmlBrush.getHtml(html);
     }
     
-    function escapeHTML(string) {
-         return(
-             string.replace(/&/g,'&amp;').
-                    replace(/>/g,'&gt;').
-                    replace(/</g,'&lt;').
-                    replace(/"/g,'&quot;')
-        );
-    }
-    
     function getConnect() {
         if (connect == null) {
             connect = io.connect("http://" + window.location.hostname, { port: window.location.port });
