@@ -1,1 +1,32 @@
-<div id="terminal"></div>
+<div id="gcliOutput"></div>
+
+<input id="gcliInput" type="text" autofocus/>
+
+<script type="text/javascript" src="javascripts/gcli/scripts/es5-shim.js"></script>
+<script type="text/javascript" src="javascripts/gcli/scripts/require.js"></script>
+<script type="text/javascript">
+    require.config({
+      paths: {
+          "text"  : "javascripts/gcli/scripts/text",
+          "i18n"  : "javascripts/gcli/scripts/i18n",
+          "socket.io": "javascripts/socket.io"
+      },
+      packagePaths: {
+        "javascripts/gcli/lib": [
+          { name: "gcli", main: "index", lib: "." },
+          { name: "test", main: "index", lib: "." },
+          { name: "gclitest", main: "index", lib: "." },
+          { name: "demo", main: "index", lib: "." }
+        ],
+        "javascripts": [
+          { name: "rconsole", main: "index", lib: "." }
+        ]
+      }
+    });
+
+    // This list should be the same as the browser part of Makefile.dryice.js
+    var deps = [ 'gcli/index', 'rconsole/index' ];
+    require(deps, function(gcli) {
+      gcli.createView();
+    });
+</script>

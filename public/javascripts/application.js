@@ -33,7 +33,7 @@
         term = new Terminal({
             termDiv: "terminal",
             greeting: [
-                "%c(green)*** tvconsole 0.1 ***%c0",
+                "%c(green)*** rconsole 0.1 ***%c0",
                 "type: /help to show help use"
             ],
             charMode: true,

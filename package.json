@@ -1,5 +1,5 @@
 {
-    "name": "tvconsole"
+    "name": "rconsole"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
@@ -9,5 +9,6 @@
     , "socket.io": "=0.8.5"
     , "Deferred" : ">=0.0.4"
     , "express-namespace": ">=0.0.4"
+    , "node-uuid": ">=1.2.0"
   }
 }
