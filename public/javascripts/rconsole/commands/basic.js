@@ -7,8 +7,8 @@
 define(function(require, exports, module) {
     
     var gcli    = require('gcli/index');
-    var io      = require('socket.io');
-    var connect = null;
+    var now     = require('nowjs');
+    // var connect = null;
 
     /**
      * Registration and de-registration.
@@ -40,23 +40,30 @@ define(function(require, exports, module) {
         }],
         exec: function(args, context) {
             var promise = context.createPromise();
-            var is_new  = args.id == null;
+            var is_new  = (args.id == null);
             
-            getConnect().emit("listen", args.id, function(info) {
-                var instructions = 'Start remote debugging for session id: <strong>' + info.id + '</strong>';
+            now.receiveMsg = function(type, data, fn) {
+                if (fn == null)
+                    fn = function() {};
+                switch(type) {
+                case "log":
+                    fn(console.log.call(console, data));
+                    break;
+                case "ping":
+                    now.sendMsg("pong");
+                    fn();
+                    break;
+                }
+                console.log("Msg", arguments);
+            }
+            
+            now.initServer(args.id, function() {
+                var instructions = 'Start remote debugging for session id: <strong>' + now.identify.id + '</strong>';
                 
                 if (is_new) {
                     instructions += "<br/>Add the following tag to the remote script:"
-                    instructions += shHtml('<script id="rconsole"\n  src="' + window.location.href + 'rconsole.js?' + info.id + '">\n</script>');
+                    instructions += shHtml('<script id="rconsole"\n  src="' + window.location.href + 'rconsole.js?' + now.identify.id + '">\n</script>');
                 }
-                
-                getConnect().on("from:" + info.id, function(msg, fn) {
-                    console.log(msg);
-                    if (fn != null)
-                        fn();
-                });
-                
-                getConnect().emit("msg", { type: "ping" });
                 
                 promise.resolve(instructions);
             });

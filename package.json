@@ -6,9 +6,9 @@
       "express"  : "2.5.0"
     , "less"     : ">= 0.0.1"
     , "ejs"      : ">= 0.0.1"
-    , "socket.io": "=0.8.5"
     , "Deferred" : ">=0.0.4"
     , "express-namespace": ">=0.0.4"
     , "node-uuid": ">=1.2.0"
+    , "now": ">=0.7.5"
   }
 }

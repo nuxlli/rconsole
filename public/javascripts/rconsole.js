@@ -18,42 +18,73 @@
     var host   = 'http://' + src.substr(7).replace(/\/.*$/, '');
     
     var init = function(require) {
-        connect(function(socket) {
-            socket.emit("speak", id, function() {
-                socket.emit("msg", { type: "ping" }, function() { console.log("pong") });
-                socket.on("to:" + id, function(msg, fn) {
-                    if (typeof msg.type != "undefined") {
-                        switch(msg.type) {
-                        case "eval":
-                            try {
-                                eval(msg.code);
-                            } catch(e) {
-                                fn({ type: "error", msg: e});
-                            }
-                        }
-                    } else {
-                        fn({ type: "error", msg: "Undefined message type" });
-                    }
+        connect(function() {
+            now.receiveMsg = function(type, data, fn) {
+                if (fn == null)
+                    fn = function() {};
+                    
+                switch(type) {
+                case "ping":
+                    now.sendMsg("pong");
+                    fn();
+                    break;
+                }
+                console.log("Msg", arguments);
+            }
+            
+            now.initClient(id, function() {
+                now.sendMsg("log", ["isso é uma teste", { foo: "bar" }], function() {
+                    console.log("Retornou");
                 });
+                now.sendMsg("ping");
             });
+            
+            // now.msg = function() {
+            //     
+            // }
+            // 
+            // socket.emit("speak", id, function() {
+            //     socket.emit("msg", { type: "ping" }, function() { console.log("pong") });
+            //     socket.on("to:" + id, function(msg, fn) {
+            //         if (typeof msg.type != "undefined") {
+            //             switch(msg.type) {
+            //             case "eval":
+            //                 try {
+            //                     eval(msg.code);
+            //                 } catch(e) {
+            //                     fn({ type: "error", msg: e});
+            //                 }
+            //             }
+            //         } else {
+            //             fn({ type: "error", msg: "Undefined message type" });
+            //         }
+            //     });
+            // });
         });
     }
     
     var socket = null;
     function connect(callback) {
         if (socket == null) {
-            require(host + "/socket.io/socket.io.js", function() {
-                // No conflict
+            require([
+                host + "/socket.io/socket.io.js",
+                host + "/nowjs/now.js"
+            ], function() {
                 fixingSocket(io);
-
-                // TODO get and use port in socket.io connect
-                socket = io.connect(host, {
-                    transports: ["jsonp-polling"]
+                
+                now.ready(function() {
+                    callback();
                 });
-                callback(socket);
+                // No conflict
+                // 
+
+                // // TODO get and use port in socket.io connect
+                // socket = io.connect(host, {
+                //     transports: ["jsonp-polling"]
+                // });
             });
         } else {
-            callback(socket);
+            callback();
         }
     }
     
