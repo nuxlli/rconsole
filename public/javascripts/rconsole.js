@@ -19,8 +19,22 @@
     
     var init = function(require) {
         connect(function(socket) {
-            socket.emit("listen", id, function(info) {
-                console.log("listen id: " + info.id);
+            socket.emit("speak", id, function() {
+                socket.emit("msg", { type: "ping" }, function() { console.log("pong") });
+                socket.on("to:" + id, function(msg, fn) {
+                    if (typeof msg.type != "undefined") {
+                        switch(msg.type) {
+                        case "eval":
+                            try {
+                                eval(msg.code);
+                            } catch(e) {
+                                fn({ type: "error", msg: e});
+                            }
+                        }
+                    } else {
+                        fn({ type: "error", msg: "Undefined message type" });
+                    }
+                });
             });
         });
     }

@@ -50,6 +50,14 @@ define(function(require, exports, module) {
                     instructions += shHtml('<script id="rconsole"\n  src="' + window.location.href + 'rconsole.js?' + info.id + '">\n</script>');
                 }
                 
+                getConnect().on("from:" + info.id, function(msg, fn) {
+                    console.log(msg);
+                    if (fn != null)
+                        fn();
+                });
+                
+                getConnect().emit("msg", { type: "ping" });
+                
                 promise.resolve(instructions);
             });
             
