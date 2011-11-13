@@ -6,26 +6,38 @@
 
 define(function(require, exports, module) {
     
-    var gcli  = require('gcli/index');
-    var now   = require('nowjs');
-    var $     = require('zepto');
+    var gcli = require('gcli/index');
+    var now  = require('nowjs');
+    var $    = require('zepto');
 
     /**
      * Registration and de-registration.
      */
     exports.startup = function() {
         gcli.addCommand(listen);
-        // gcli.addCommand(eval);
+        gcli.addCommand(clear);
         // gcli.addCommand(load);
-        // gcli.addCommand(clear);
-        // gcli.addCommand(about);
         // gcli.addCommand(refresh);
     };
 
     exports.shutdown = function() {
         gcli.removeCommand(listen);
-        // gcli.removeCommand(eval);
+        gcli.removeCommand(clear);
+        // gcli.removeCommand(load);
+        // gcli.removeCommand(refresh);
     };
+    
+    var clear  = {
+        name: "clear",
+        description: {
+            'root': 'Clear output console'
+        },
+        exec: function(args, context) {
+            setTimeout(function() {
+                output_elem().html("");
+            }, 100);
+        }
+    }
 
     var listen = {
         name: 'listen',
@@ -49,8 +61,6 @@ define(function(require, exports, module) {
                     fn = function() {};
                 switch(type) {
                 case "log":
-                    // fn(console.log.call(console, data));
-                    // fn(output(data));
                     fn(output(shJS(JSON.stringify.call(JSON, data))));
                     break;
                 case "ping":
@@ -70,8 +80,6 @@ define(function(require, exports, module) {
                     instructions += shHtml('<script id="rconsole"\n  src="' + window.location.href + 'rconsole.js?' + now.identify.id + '">\n</script>');
                 }
                 
-                // now.sendMsg("eval", "alert('teste');");
-                
                 promise.resolve(instructions);
             });
             
@@ -79,12 +87,8 @@ define(function(require, exports, module) {
         }
     }
     
-    var gco_element = null;
     function output(output) {
-        if (gco_element == null)
-            gco_element = $('.gcliCommandOutput');
-        
-        gco_element.append('\
+        output_elem().append('\
             <div class="gcliRowIn">\
               <!-- What the user actually typed -->\
               <span class="gcliGt gcliComplete">&#x00BB;</span>\
@@ -118,4 +122,15 @@ define(function(require, exports, module) {
         }
         return jsBrush.getHtml(js);
     }
+    
+    var gco_element = null;
+    function output_elem() {
+        if (gco_element == null)
+            gco_element = $('.gcliCommandOutput');
+        return gco_element;
+    }
+    
+    exports.shJS   = shJS;
+    exports.shHtml = shHtml;
+    exports.output = output;
 });

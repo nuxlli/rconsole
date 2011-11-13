@@ -5,17 +5,22 @@
  */
 
 define(function(require, exports, module) {
+    
+    // var types  = require('gcli/types');
+    // var jstype = require('rconsole/types/remotejs').JavascriptType;    
+    // jstype.prototype.name = 'remotejs';
+    // types.registerType(jstype);
 
-  require('gcli/index');
+    require('gcli/index');
+    require('rconsole/commands/basic').startup();
+    require('rconsole/commands/eval').startup();
 
-  require('rconsole/commands/basic').startup();
-
-  var help = require('rconsole/commands/help');
-  help.startup();
-  help.helpMessages.prefix = "\
-    <h2>Welcome to rconsole</h2>\
-    <p>rconsole is .....\
-    <p>Useful links: \
-    <a target='_blank' href='https://github.com/nuxlli/rconsole'>source</a>\
-  "
+    var help = require('rconsole/commands/help');
+    help.startup();
+    help.helpMessages.prefix = "\
+        <h2>Welcome to rconsole</h2>\
+        <p>rconsole is .....\
+        <p>Useful links: \
+        <a target='_blank' href='https://github.com/nuxlli/rconsole'>source</a>\
+    "
 });

@@ -29,10 +29,9 @@
                     return fn();
                 case "eval":
                     try {
-                        return fn(eval(data));
+                        return fn("result", eval(data));
                     } catch(e) {
-                        now.sendMsg("error", e);
-                        return fn("error");
+                        return fn("error", { message: e.message });
                     }
                 }
                 console.log("Msg", arguments);
