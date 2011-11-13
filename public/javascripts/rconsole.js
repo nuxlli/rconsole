@@ -26,14 +26,22 @@
                 switch(type) {
                 case "ping":
                     now.sendMsg("pong");
-                    fn();
-                    break;
+                    return fn();
+                case "eval":
+                    try {
+                        return fn(eval(data));
+                    } catch(e) {
+                        now.sendMsg("error", e);
+                        return fn("error");
+                    }
                 }
                 console.log("Msg", arguments);
+                return fn();
             }
             
             now.initClient(id, function() {
-                now.sendMsg("log", ["isso é uma teste", { foo: "bar" }], function() {
+                // now.sendMsg("log", ["isso é uma teste", { foo: "bar" }], function() {
+                now.sendMsg("log", "isso é uma teste", function() {
                     console.log("Retornou");
                 });
                 now.sendMsg("ping");
@@ -92,10 +100,11 @@
     // 2 - Load socket.io lib from origem
     // 3 - Fixed socket.io to use xhr in raplace for iframe
     // 4 - Conect to socket.io and bind events
-    // 5 - Fix then:
+    // 3 - Implement log, expand objects
+    // 6 - Fix then:
     //     - not console.log or mobile connect? Add or replace
     //     - is tv? replace alert for console.log
-    // 6 - Adding tools methods: eval, refresh, load
+    // 7 - Adding tools methods: eval, refresh, load
     
     // Fixed socket.io request
     function fixingSocket(io) {
