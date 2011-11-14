@@ -1,5 +1,12 @@
 # rconsole #
 
+# TODO #
+
+- Refactory eval command to similar more the local eval
+- Use localStorage to "remember" and sugsest listen id
+- Alias and list listen id 
+- Multi listen support
+
 # License #
 
 Copyright (c) 2011, Éverton Antônio Ribeiro <nuxlli@gmail.com>
