@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         gcli.addCommand(load);
         gcli.addCommand(loadUrl);
         gcli.addCommand(loadLib);
-        // gcli.addCommand(refresh);
+        gcli.addCommand(refresh);
     };
 
     exports.shutdown = function() {
@@ -28,7 +28,7 @@ define(function(require, exports, module) {
         gcli.removeCommand(load);
         gcli.removeCommand(loadUrl);
         gcli.removeCommand(loadLib);
-        // gcli.removeCommand(refresh);
+        gcli.removeCommand(refresh);
     };
     
     var clear  = {
@@ -40,6 +40,26 @@ define(function(require, exports, module) {
             setTimeout(function() {
                 output_elem().html("");
             }, 100);
+        }
+    }
+    
+    var refresh = {
+        name: "refresh",
+        description: {
+            'root': "Refresh remote page"
+        },
+        exec: function(args, context) {
+            var promise = context.createPromise();
+            
+            sendMsg("refresh", null, function(type, result) {
+                if (type == "ok") {
+                    promise.resolve("Refresh in progress, wait!");
+                } else {
+                    promise.reject("Refresh is not possible, error: " + result.message);
+                }
+            });
+            
+            return promise;
         }
     }
     

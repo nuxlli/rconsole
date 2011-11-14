@@ -28,6 +28,10 @@
                 switch(type) {
                 case "ping":
                     return sendResponse("pong", "ok", null, fn);
+                case "refresh":
+                    // TODO: Implement event to refresh;
+                    sendResponse(type, "ok", null, fn);
+                    return window.location.href = window.location.href;
                 case "eval":
                     try {
                         return sendResponse(type, "ok", eval(data), fn);
