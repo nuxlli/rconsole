@@ -157,6 +157,12 @@ define(function(require, exports, module) {
                     now.sendMsg("pong");
                     fn();
                     break;
+                case "connected":
+                    output("Client id:<strong>" + data + "</strong> has <span class='connected'>connected</span>");
+                    break;
+                case "disconnected":
+                    output("Client id:<strong>" + data + "</strong> <span class='disconnected'>disconnected</span>", 'gcliComplete gcliError');
+                    break;
                 default:
                     console.log("Msg", arguments);
                 }
