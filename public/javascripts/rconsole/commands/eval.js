@@ -10,10 +10,6 @@ define(function(require, exports, module) {
     var now   = require('nowjs');
     var $     = require('zepto');
     var basic = require('rconsole/commands/basic');
-    
-    // require('rconsole/types/remotejs').setGlobalObject({
-    //     console: { log: function() {} }
-    // });
 
     /**
      * Registration and de-registration.
@@ -43,18 +39,19 @@ define(function(require, exports, module) {
             
             // &#x2192; is right arrow. We use explicit entities to ensure XML validity
             var resultPrefix = '<em>{ ' + args.javascript + ' }</em> &#x2192; ';
-            now.sendMsg("eval", args.javascript, function(type, result) {
-                if (type == "result") {
+            basic.sendMsg("eval", "(function() { return " + args.javascript + "})();" , function(type, result) {
+                if (type == "ok") {
                     if (result === null) {
                         result = 'null.';
                     } else if(result === undefined) {
                         result = 'undefined.';
+                    } else if(typeof result == "object") {
+                        result = basic.shJS(JSON.stringify(result));
                     }
                     
                     promise.resolve(resultPrefix + result);
                 } else {
-                    console.log(result);
-                    promise.resolve(resultPrefix + 'Exception: ' + result.message);
+                    promise.reject(resultPrefix + 'Exception: ' + result.message);
                 }
             });
             return promise;

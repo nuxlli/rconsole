@@ -19,54 +19,41 @@
     
     var init = function(require) {
         connect(function() {
+            var sendResponse = function(type, status, data, fn) {
+                (typeof fn == "function") ?
+                    fn(status, data) : now.sendMsg(type, data);
+            }
+            
             now.receiveMsg = function(type, data, fn) {
-                if (fn == null)
-                    fn = function() {};
-                    
                 switch(type) {
                 case "ping":
-                    now.sendMsg("pong");
-                    return fn();
+                    return sendResponse("pong", "ok", null, fn);
                 case "eval":
                     try {
-                        return fn("result", eval(data));
+                        return sendResponse(type, "ok", eval(data), fn);
                     } catch(e) {
-                        return fn("error", { message: e.message });
+                        return sendResponse(type, "error", {
+                            message: e.message
+                        }, fn);
                     }
+                case "load": 
+                    return require(data, function() {
+                        sendResponse(type, "ok", { message: "loaded" }, fn);
+                    }, function() {
+                        sendResponse(type, "error", { message: "timeout" } , fn);
+                    });
                 }
                 console.log("Msg", arguments);
-                return fn();
+                if (typeof fn == "function")
+                    return fn();
             }
             
             now.initClient(id, function() {
-                // now.sendMsg("log", ["isso é uma teste", { foo: "bar" }], function() {
                 now.sendMsg("log", "isso é uma teste", function() {
                     console.log("Retornou");
                 });
                 now.sendMsg("ping");
             });
-            
-            // now.msg = function() {
-            //     
-            // }
-            // 
-            // socket.emit("speak", id, function() {
-            //     socket.emit("msg", { type: "ping" }, function() { console.log("pong") });
-            //     socket.on("to:" + id, function(msg, fn) {
-            //         if (typeof msg.type != "undefined") {
-            //             switch(msg.type) {
-            //             case "eval":
-            //                 try {
-            //                     eval(msg.code);
-            //                 } catch(e) {
-            //                     fn({ type: "error", msg: e});
-            //                 }
-            //             }
-            //         } else {
-            //             fn({ type: "error", msg: "Undefined message type" });
-            //         }
-            //     });
-            // });
         });
     }
     
@@ -82,13 +69,6 @@
                 now.ready(function() {
                     callback();
                 });
-                // No conflict
-                // 
-
-                // // TODO get and use port in socket.io connect
-                // socket = io.connect(host, {
-                //     transports: ["jsonp-polling"]
-                // });
             });
         } else {
             callback();

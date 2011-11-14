@@ -5,11 +5,6 @@
  */
 
 define(function(require, exports, module) {
-    
-    // var types  = require('gcli/types');
-    // var jstype = require('rconsole/types/remotejs').JavascriptType;    
-    // jstype.prototype.name = 'remotejs';
-    // types.registerType(jstype);
 
     require('gcli/index');
     require('rconsole/commands/basic').startup();
